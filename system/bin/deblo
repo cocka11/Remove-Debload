@@ -9,8 +9,6 @@ echo "$div"
 
 echo "\033[1;35m{This scripts deletes all application data as data; cache; Dalvik-cache:}\033[0m"
 echo "$div"
-mount -o rw,remount /system 2>/dev/null
-mount -o rw,remount /sbin/.magisk/block/system_root 2>/dev/null
 
 echo "\033[1;4;3;36mSelect the location of applications\033[0m"
 echo "$div"
