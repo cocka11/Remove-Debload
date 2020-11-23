@@ -1,0 +1,366 @@
+#!/system/bin/sh
+
+ID="deblo"
+_name=$(basename $0)
+ls /data >/dev/null 2>&1 || { echo "$ID needs to run as root!"; echo "type 'su' then '$_name'"; exit 1; }
+clear
+echo "\033[1;41;37m==>This scripts is for All phone<==\033[0m"
+echo "$div"
+
+echo "\033[1;35m{This scripts deletes all application data as data; cache; Dalvik-cache:}\033[0m"
+echo "$div"
+mount -o rw,remount /system 2>/dev/null
+mount -o rw,remount /sbin/.magisk/block/system_root 2>/dev/null
+
+echo "\033[1;4;3;36mSelect the location of applications\033[0m"
+echo "$div"
+echo "\033[1;36m(1)\033[0m \033[1;1;3;33mSystem App\033[0m"
+echo "##############"
+echo "\033[1;36m(2)\033[0m \033[1;1;3;33mSystem Priv-App\033[0m"
+echo "###################"
+echo "\033[1;36m(3)\033[0m \033[1;1;3;33mSystem Product App\033[0m" 
+echo "######################"
+echo "\033[1;36m(4)\033[0m \033[1;1;3;33mSystem Product Priv-!App\033[0m"
+echo "############################"
+echo "$div"
+echo "\033[1;31mPress (X) for Back to menu\033[0m"
+echo "$div"
+echo -n "\033[1;32m[CHOICE]:\033[0m"
+read ut
+
+case $ut in
+1)
+
+if [ -d "/system/app" ]; then
+echo ""
+else
+echo "system app folder does not exist" && exit;
+fi
+
+ba=(`basename $0`)
+
+ref () {
+sh $ba 2>/dev/null
+sh /system/bin/$ba 2>/dev/null
+}
+
+ar=(`ls /system/app/`)
+
+len=${#ar[@]}
+
+i=0
+while [ $i -lt $len ]; do
+sleep 0
+echo "\033[1;36m($i)\033[0m-\033[1;32m{${ar[$i]}}\033[0m"
+let i++
+done
+
+echo "$div"
+echo "\033[1;3;33mSelect the application number from the list\033[0m"
+echo "$div"
+echo "\033[1;41;37m(x) Back to Menu\033[0m"
+echo "$div"
+echo -n "\033[1;32m[CHOICE]:\033[0m"
+
+read n
+
+fd () {
+  clear && ref && exit
+}
+[ "$n" == "x" ] && fd
+
+Arbri=(`ls /system/app/`)
+
+for i in "${Arbri[$n]}"; do
+done
+echo "$div"
+echo "\033[1;36mYou are sure you want to delete $i\033[0m"
+echo "$div"
+    
+    echo "(1) \033[1;31mYes\033[0m"
+    echo "(2) \033[1;32mNo and back to menu\033[0m"
+    echo "$div"
+    echo -n "\033[1;32m[CHOICE]:\033[0m"
+
+read t
+
+case $t in
+1)
+package=`aapt dump badging /system/app/$i/$i.apk | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g` 2>/dev/null
+pm uninstall -k --user 0 $package 2>/dev/null
+sleep 1
+rm -rf /system/app/$i 2>/dev/null
+rm -f /data/dalvik-cache/arm64/system@app@$i* 2>/dev/null
+rm -f /data/dalvik-cache/arm/system@app@$i* 2>/dev/null
+;;
+2) clear && ref && exit
+;;
+*) echo "\033[1;41;37mError. select any number of the list\033[0m" && exit
+;;
+esac
+echo "$div"
+    echo "Please wait.."
+    sleep 1.3
+    echo "Deleting $i"
+    sleep 1
+    echo "Application was deleted successfully"
+     echo "$div"
+sleep 1
+;;
+2)
+
+if [ -d "/system/app" ]; then
+echo ""
+else
+echo "system priv-app folder does not exist" && exit;
+fi
+ba=(`basename $0`)
+
+ref () {
+sh $ba
+sh /system/bin/$ba
+}
+
+ar=(`ls /system/priv-app/`)
+
+len=${#ar[@]}
+
+i=0
+while [ $i -lt $len ]; do
+sleep 0
+echo "\033[1;36m($i)\033[0m-\033[1;32m{${ar[$i]}}\033[0m"
+let i++
+done
+
+echo "$div"
+echo "\033[1;3;33mSelect the application number from the list\033[0m"
+echo "$div"
+echo "\033[1;41;37m(x) Back to Menu\033[0m"
+echo "$div"
+echo -n "\033[1;32m[CHOICE]:\033[0m"
+
+read n
+
+fd () {
+  clear && ref && exit
+}
+[ "$n" == "x" ] && fd
+n
+Arbri=(`ls /system/priv-app/`)
+
+for i in "${Arbri[$n]}"; do
+done
+echo "$div"
+echo "\033[1;36mYou are sure you want to delete $i\033[0m"
+echo "$div"
+    
+    echo "(1) \033[1;31mYes\033[0m"
+    echo "(2) \033[1;32mNo and back to menu\033[0m"
+    echo "$div"
+    echo -n "\033[1;32m[CHOICE]:\033[0m"
+
+read t
+
+case $t in
+1)
+package=`aapt dump badging /system/priv-app/$i/$i.apk | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g` 2>/dev/null
+pm uninstall -k --user 0 $package 2>/dev/null
+sleep 1
+rm -rf /system/priv-app/$i 2>/dev/null
+rm -f /data/dalvik-cache/arm64/system@priv-app@$i* 2>/dev/null
+rm -f /data/dalvik-cache/arm/system@priv-app@$i* 2>/dev/null
+;;
+2) clear && ref && exit
+;;
+*) echo "\033[1;41;37mError. select any number of the list\033[0m" && exit
+;;
+esac
+echo "$div"
+    echo "Please wait.."
+    sleep 1.3
+    echo "Deleting $i"
+    sleep 1
+    echo "Application was deleted successfully"
+     echo "$div"
+sleep 1
+;;
+3)
+
+if [ -d "/system/app" ]; then
+echo ""
+else
+echo "system product app folder does not exist" && exit;
+fi
+
+ba=(`basename $0`)
+
+ref () {
+sh $ba
+sh /system/bin/$ba
+}
+
+ar=(`ls /system/product/app/`)
+
+len=${#ar[@]}
+
+i=0
+while [ $i -lt $len ]; do
+sleep 0
+echo "\033[1;36m($i)\033[0m-\033[1;32m{${ar[$i]}}\033[0m"
+let i++
+done
+
+echo "$div"
+echo "\033[1;3;33mSelect the application number from the list\033[0m"
+echo "$div"
+echo "\033[1;41;37m(x) Back to Menu\033[0m"
+echo "$div"
+echo -n "\033[1;32m[CHOICE]:\033[0m"
+
+read n
+
+fd () {
+  clear && ref && exit
+}
+[ "$n" == "x" ] && fd
+
+Arbri=(`ls /system/product/app/`)
+
+for i in "${Arbri[$n]}"; do
+done
+echo "$div"
+echo "\033[1;36mYou are sure you want to delete $i\033[0m"
+echo "$div"
+    
+    echo "(1) \033[1;31mYes\033[0m"
+    echo "(2) \033[1;32mNo and back to menu\033[0m"
+    echo "$div"
+    echo -n "\033[1;32m[CHOICE]:\033[0m"
+
+read t
+
+case $t in
+1)
+package=`aapt dump badging /system/product/app/$i/$i.apk | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g` 2>/dev/null
+pm uninstall -k --user 0 $package 2>/dev/null
+sleep 1
+rm -rf /system/product/app/$i 2>/dev/null
+rm -f /data/dalvik-cache/arm64/system@product@app@$i* 2>/dev/null
+rm -f /data/dalvik-cache/arm/system@product@app@$i* 2>/dev/null
+;;
+2) clear && ref && exit
+;;
+*) echo "\033[1;41;37mError. select any number of the list\033[0m" && exit
+;;
+esac
+echo "$div"
+    echo "Please wait.."
+    sleep 1.3
+    echo "Deleting $i"
+    sleep 1
+    echo "Application was deleted successfully"
+     echo "$div"
+sleep 1
+;;
+4)
+
+if [ -d "/system/app" ]; then
+echo ""
+else
+echo "system priduct priv-app folder does not exist" && exit;
+fi
+
+ba=(`basename $0`)
+
+ref () {
+sh $ba
+sh /system/bin/$ba
+}
+
+ar=(`ls /system/product/priv-app/`)
+
+len=${#ar[@]}
+
+i=0
+while [ $i -lt $len ]; do
+sleep 0
+echo "\033[1;36m($i)\033[0m-\033[1;32m{${ar[$i]}}\033[0m"
+let i++
+done
+
+echo "$div"
+echo "\033[1;3;33mSelect the application number from the list\033[0m"
+echo "$div"
+echo "\033[1;41;37m(x) Back to Menu\033[0m"
+echo "$div"
+echo -n "\033[1;32m[CHOICE]:\033[0m"
+
+read n
+
+fd () {
+  clear && ref && exit
+}
+[ "$n" == "x" ] && fd
+
+Arbri=(`ls /system/product/priv-app/`)
+
+for i in "${Arbri[$n]}"; do
+done
+echo "$div"
+echo "\033[1;36mYou are sure you want to delete $i\033[0m"
+echo "$div"
+    
+    echo "(1) \033[1;31mYes\033[0m"
+    echo "(2) \033[1;32mNo and back to menu\033[0m"
+    echo "$div"
+    echo -n "\033[1;32m[CHOICE]:\033[0m"
+
+read t
+
+case $t in
+1)
+package=`aapt dump badging /system/product/priv-app/$i/$i.apk | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g` 2>/dev/null
+pm uninstall -k --user 0 $package 2>/dev/null
+sleep 1
+rm -rf /system/product/priv-app/$i 2>/dev/null
+rm -f /data/dalvik-cache/arm64/system@product@priv-app@$i* 2>/dev/null
+rm -f /data/dalvik-cache/arm/system@product@priv-app@$i* 2>/dev/null
+;;
+2) clear && ref && exit
+;;
+*) echo "\033[1;41;37mError. select any number of the list\033[0m" && exit
+;;
+esac
+echo "$div"
+    echo "Please wait.."
+    sleep 1.3
+    echo "Deleting $i"
+    sleep 1
+    echo "Application was deleted successfully"
+     echo "$div"
+sleep 1
+;;
+x) clear && sh /system/bin/deblo && exit
+;;
+*) echo "\033[1;41;37mError. select any number of the list\033[0m" && exit
+;;
+esac
+
+echo "\033[1;41;37m(x) Back to Menu\033[0m"
+echo "$div"
+echo "\033[1;41;37m(Y) For Exit\033[0m"
+echo "$div"
+echo -n "\033[1;32m[CHOICE]:\033[0m"
+
+read res
+
+back () {
+clear && ref && exit
+}
+
+et () {
+clear && echo "😁 Bye Bye 😁" && exit
+}
+
+[ "$res" == "x" ] && back
+[ "$res" == "y" ] && et
